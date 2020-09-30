@@ -1,0 +1,47 @@
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
+
+public class Main {
+
+    static Map<Character, Character> charsMap;
+
+    public static void main(String[] args) {
+        charsMap = new HashMap<>();
+        Scanner scanner = new Scanner(System.in);
+
+        String[] substrings = scanner.nextLine().split(" ");
+        String initial = substrings[0];
+        String resulting = substrings[1];
+
+        // Eсли буквы нельзя заменять на пробелы или пробелы на буквы, строки разной длины сразу не подходят
+        if (initial.length() != resulting.length())
+            end(0);
+
+        for (int i = 0; i < initial.length(); i++)
+            if (!checkReplace(initial.charAt(i), resulting.charAt(i)))
+                end(0);
+
+        end(1);
+    }
+
+    // Заготовлена для удобства, так как всё сделано в main. Используется вместо return
+    private static void end(int result) {
+        System.out.println(result);
+        System.exit(0);
+    }
+
+    // Проверяет сохранён ли для символа из исходной строки символ на замену из результирующей.
+    // Если сохранён, проверяет такой же ли это символ, который передан в метод
+    // Если не сохранён, сохраняет
+    private static boolean checkReplace(char replaced, char replacement) {
+        if (charsMap.containsKey(replaced)) {
+            char savedReplacement = charsMap.get(replaced);
+            return savedReplacement == replacement;
+        } else {
+            charsMap.put(replaced, replacement);
+            return true;
+        }
+    }
+}

@@ -1,0 +1,81 @@
+
+import java.util.*;
+
+
+public class Main {
+
+
+    public static class Point implements Comparable<Point> {
+
+        public Point(int time, int sign) {
+            this.time = time;
+            this.sign = sign;
+        }
+
+        public int time;
+        // переменная sign определяет, является ли точка Point началом временного отрезка (1) или концом (-1)
+        public int sign;
+
+        @Override
+        public String toString() {
+            return "Point{" +
+                    "time=" + time +
+                    ", sign=" + sign +
+                    '}';
+        }
+
+        @Override
+        public int compareTo(Point that) {
+            return Integer.compare(this.time, that.time);
+        }
+    }
+
+    static List<Point> points;
+
+    public static void main(String[] args) {
+        points = new ArrayList<>();
+        Scanner scanner = new Scanner(System.in);
+
+        long numberOfIntervals = scanner.nextInt();
+
+        for (int i = 0; i < numberOfIntervals; i++) {
+            int start = scanner.nextInt();
+            int end = scanner.nextInt();
+            points.add(new Point(start, 1));
+            points.add(new Point(end, -1));
+        }
+
+        Collections.sort(points);
+
+        int vacancies = 0;
+        int maxVacancies = 0;
+        int numOfMaxVacanciesPeriods = 0;
+        int maxVacanciesTimeSummary = 0;
+        int startOfMaxVacancyPeriod = 0;
+
+        for (Point point : points) {
+            if (point.sign > 0) {
+                vacancies ++;
+                if (vacancies > maxVacancies) { // Если нашёлся период с наибольшим количеством вакансий
+                    maxVacancies = vacancies;
+                    numOfMaxVacanciesPeriods = 1;
+                    startOfMaxVacancyPeriod = point.time;
+                    maxVacanciesTimeSummary = 0;
+                } else if (vacancies == maxVacancies) { // Если это ещё один период с таким же количеством, как и максимальное
+                    numOfMaxVacanciesPeriods += 1;
+                    startOfMaxVacancyPeriod = point.time;
+                }
+            } else if (vacancies == maxVacancies) { // Если это конец интервала с наибольшим количеством вакансий
+                maxVacanciesTimeSummary += point.time - startOfMaxVacancyPeriod + 1;
+                vacancies -= 1;
+            }
+        }
+
+        System.out.println(numOfMaxVacanciesPeriods + " " + maxVacanciesTimeSummary);
+
+    }
+
+}
+
+
+
